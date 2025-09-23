@@ -11,7 +11,7 @@ import uuid
 from django.core.files.storage import default_storage
 from django.conf import settings
 import time
-from chatbot.chatbot_service import ChatbotService
+from chatbot.rag_service import RAGService
 
 # Model will be loaded lazily to handle compatibility issues
 model = None
@@ -113,9 +113,10 @@ def predict_image(request):
         time.sleep(0.2)
 
     time.sleep(0.3)
-    # Get additional information about the predicted fish from chatbot
-    chatbot_service = ChatbotService()
-    fish_info = chatbot_service.get_fish_information(class_name)
+    
+    # Get additional information about the predicted fish from RAG service
+    rag_service = RAGService()
+    fish_info = rag_service.get_fish_information(class_name)
     
     # Return prediction with relative path to image and additional info
     return Response({

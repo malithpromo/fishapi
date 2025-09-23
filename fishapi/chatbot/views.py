@@ -13,6 +13,7 @@ from .models import FishSpecies, ChatSession, ChatMessage
 from .chatbot_service import ChatbotService
 from .ontology_service import OntologyService
 from .simple_chatbot_service import SimpleChatbotService
+from .rag_service import RAGService
 
 
 def chat_view(request):
@@ -96,9 +97,9 @@ def chat_api(request):
             content=message
         )
         
-        # Get chatbot response using simple service
-        chatbot_service = SimpleChatbotService()
-        response = chatbot_service.get_response(message)
+        # Get chatbot response using RAG service
+        rag_service = RAGService()
+        response = rag_service.get_response(message)
         
         # Save assistant response
         ChatMessage.objects.create(

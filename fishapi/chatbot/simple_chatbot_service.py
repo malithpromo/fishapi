@@ -6,13 +6,78 @@ from .models import FishSpecies
 class SimpleChatbotService:
     def __init__(self):
         self.fish_species_mapping = {
-            "bulath_hapaya": {"id": "wd:Q2249852", "vernacular": "Bulath Hapaya", "scientific": "Pethia nigrofasciata"},
-            "dankuda_pethiya": {"id": "wd:Q28599176", "vernacular": "Dankuda Pethiya", "scientific": "Dawkinsia srilankensis"},
-            "depulliya": {"id": "wd:Q1518816", "vernacular": "Depulliya", "scientific": "Pethia cumingii"},
-            "halamal_dandiya": {"id": "wd:Q269931", "vernacular": "Halamal Dandiya", "scientific": "Rasboroides vaterifloris"},
-            "lethiththaya": {"id": "wd:Q637598", "vernacular": "Lethiththaya", "scientific": "Puntius titteya"},
-            "pathirana_salaya": {"id": "wd:Q2917966", "vernacular": "Pathirana Salaya", "scientific": "Devario pathirana"},
-            "thal_kossa": {"id": "wd:Q2703814", "vernacular": "Thal Kossa", "scientific": "Belontia signata"}
+            "puntius_titteya": {
+                "id": "http://www.freshwaterfish.org/ontology#Puntius_titteya",
+                "scientific": "Puntius titteya",
+                "vernacular": "le titteya",
+                "common": "cherry barb",
+                "family": "Cyprinidae",
+                "order": "Cypriniformes",
+                "habitat": "Freshwater, prefers still pools over fast-flowing areas",
+                "max_length": "5.0 cm TL",
+                "iucn_status": "Vulnerable (VU)",
+                "description": "Cherry Barb has an elongated body with a pair of maxillary barbels"
+            },
+            "devario_pathirana": {
+                "id": "http://www.freshwaterfish.org/ontology#Devario_pathirana",
+                "scientific": "Devario pathirana",
+                "vernacular": "pathirana saalaya",
+                "common": "Barred Danio, Sri Lanka Barred Danio",
+                "family": "Danionidae",
+                "order": "Cypriniformes",
+                "habitat": "Freshwater, prefers still pools over fast-flowing areas",
+                "max_length": "6.0 cm SL",
+                "iucn_status": "Endangered (EN)",
+                "description": "Compressed body, dorsally greenish-brown, lighter laterally with metallic blue bars"
+            },
+            "dawkinsia_srilankensis": {
+                "id": "http://www.freshwaterfish.org/ontology#Dawkinsia_srilankensis",
+                "scientific": "Dawkinsia srilankensis",
+                "vernacular": "Mal Pethiya",
+                "common": "Sri Lanka Blotched Filamented Barb, Blotched Filamented Barb",
+                "family": "Cyprinidae",
+                "order": "Cypriniformes",
+                "habitat": "Freshwater; benthopelagic; tropical. Prefers fast flowing streams",
+                "max_length": "10.0 cm TL",
+                "iucn_status": "Endangered (EN)",
+                "description": "Slightly elongated body with terminal mouth, no barbels. Three distinct black blotches laterally"
+            },
+            "pethia_cumingii": {
+                "id": "http://www.freshwaterfish.org/ontology#Pethia_cumingii",
+                "scientific": "Pethia cumingii",
+                "vernacular": "Kahavaral Depulliya /Potaya",
+                "common": "Cuming's Barb, Two spot barb",
+                "family": "Cyprinidae",
+                "order": "Cypriniformes",
+                "habitat": "Freshwater; benthopelagic. Clear, shallow, slow flowing, shaded streams",
+                "max_length": "5.0 cm TL",
+                "iucn_status": "Endangered (EN)",
+                "description": "Laterally compressed body with two vertically elongated blotches"
+            },
+            "belontia_signata": {
+                "id": "http://www.freshwaterfish.org/ontology#Belontia_signata",
+                "scientific": "Belontia signata",
+                "vernacular": "Thalkossa",
+                "common": "Ceylonese Combtail",
+                "family": "Osphronemidae",
+                "order": "Anabantiformes",
+                "habitat": "Freshwater, prefers slow-flowing, clear streams with sandy or rocky substrates",
+                "max_length": "18.0 cm TL",
+                "iucn_status": "Vulnerable (VU)",
+                "description": "Compressed body with elongated, pointed dorsal and anal fins"
+            },
+            "pethia_nigrofasciata": {
+                "id": "http://www.freshwaterfish.org/ontology#Pethia_nigrofasciata",
+                "scientific": "Pethia nigrofasciata",
+                "vernacular": "Bulath Hapaya / Manamaalaya",
+                "common": "Sri Lanka Black Ruby Barb, Black Ruby Barb",
+                "family": "Cyprinidae",
+                "order": "Cypriniformes",
+                "habitat": "Freshwater; benthopelagic. Clear waters with rocky and sandy substrata",
+                "max_length": "6.0 cm TL",
+                "iucn_status": "Vulnerable (VU)",
+                "description": "Compressed body with three black vertical bands"
+            }
         }
 
     def get_response(self, user_query):
@@ -33,34 +98,46 @@ class SimpleChatbotService:
 
     def _find_fish_in_query(self, query):
         """Find which fish species is mentioned in the query"""
-        for fish_key, fish_info in self.fish_species_mapping.items():
-            # Check for various forms of the fish name
-            fish_variations = [
-                fish_key,
-                fish_key.replace('_', ' '),
-                fish_info["vernacular"].lower(),
-                fish_info["scientific"].lower()
-            ]
-            
-            # Add common alternative names
-            if fish_key == "lethiththaya":
-                fish_variations.extend(["lethiththaya", "lay titteya", "cherry barb"])
-            elif fish_key == "bulath_hapaya":
-                fish_variations.extend(["bulath hapaya", "black ruby barb", "purplehead barb"])
-            elif fish_key == "dankuda_pethiya":
-                fish_variations.extend(["dankuda pethiya", "blotched filamented barb"])
-            elif fish_key == "depulliya":
-                fish_variations.extend(["depulliya", "two-spot barb", "cuming's barb"])
-            elif fish_key == "halamal_dandiya":
-                fish_variations.extend(["halamal dandiya", "pearly rasbora", "fire rasbora"])
-            elif fish_key == "pathirana_salaya":
-                fish_variations.extend(["pathirana salaya", "barred danio"])
-            elif fish_key == "thal_kossa":
-                fish_variations.extend(["thal kossa", "ceylonese combtail"])
-            
-            for variation in fish_variations:
-                if variation in query:
-                    return fish_key
+        # Check for scientific names
+        for key, info in self.fish_species_mapping.items():
+            if info['scientific'].lower() in query:
+                return key
+        
+        # Check for vernacular names (including partial matches)
+        for key, info in self.fish_species_mapping.items():
+            vernacular = info['vernacular'].lower()
+            if vernacular in query or any(part in query for part in vernacular.split()):
+                return key
+        
+        # Check for common names (including partial matches)
+        for key, info in self.fish_species_mapping.items():
+            common = info['common'].lower()
+            if common in query or any(part in query for part in common.split(',')):
+                return key
+        
+        # Check for specific known variations
+        variations = {
+            "bulath hapaya": "pethia_nigrofasciata",
+            "bulath": "pethia_nigrofasciata",
+            "hapaya": "pethia_nigrofasciata",
+            "depulliya": "pethia_cumingii",
+            "two spot": "pethia_cumingii",
+            "cuming": "pethia_cumingii",
+            "cherry barb": "puntius_titteya",
+            "titteya": "puntius_titteya",
+            "barred danio": "devario_pathirana",
+            "pathirana": "devario_pathirana",
+            "combtail": "belontia_signata",
+            "thal kossa": "belontia_signata",
+            "thalkossa": "belontia_signata",
+            "blotched": "dawkinsia_srilankensis",
+            "filamented": "dawkinsia_srilankensis",
+            "mal pethiya": "dawkinsia_srilankensis"
+        }
+        
+        for variation, key in variations.items():
+            if variation in query:
+                return key
         
         return None
 
@@ -139,11 +216,17 @@ class SimpleChatbotService:
         """Format basic response when database is not available"""
         return f"""**{fish_info['vernacular']}** ({fish_info['scientific']})
 
-This is one of the seven endemic freshwater fish species of Sri Lanka.
+This is one of the six endemic freshwater fish species of Sri Lanka.
 
 - **Scientific Name**: {fish_info['scientific']}
 - **Vernacular Name**: {fish_info['vernacular']}
-- **Status**: Endemic to Sri Lanka
+- **Common Name**: {fish_info['common']}
+- **Family**: {fish_info['family']}
+- **Order**: {fish_info['order']}
+- **Habitat**: {fish_info['habitat']}
+- **Maximum Length**: {fish_info['max_length']}
+- **IUCN Status**: {fish_info['iucn_status']}
+- **Description**: {fish_info['description']}
 
 For more detailed information, please ask specific questions about:
 - Habitat and water conditions
